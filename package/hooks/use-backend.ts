@@ -1,6 +1,6 @@
 import { RootAccountData } from "../types"
 
-export async function typedFetch<T = unknown>(input: RequestInfo | URL, init?: RequestInit, keyPair?: KeyPair, signal?: AbortSignal) {
+export async function typedFetch<T = unknown>(input: any, init?: RequestInit, keyPair?: KeyPair, signal?: AbortSignal) {
   const reqBody = {
     signal,
     ...(init ?? {})

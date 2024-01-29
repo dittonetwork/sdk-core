@@ -42,6 +42,20 @@ export class DittoSDK {
     return this
   }
 
+  public async updateCachedAccount() {
+    await this.backend.getAccountData(this.authentication._apiKeyPair?.accessToken ?? "").then(async accountData => {
+      if (!accountData) return
+
+      this._rootAccountData = {
+        ...accountData,
+        accounts: accountData.accounts.map(account => ({
+          ...account,
+          vaults: account.vaults
+        }))
+      }
+    })
+  }
+
   public createAutomation(options: AutomationInitOptions) {
     return new Automation(options)
   }

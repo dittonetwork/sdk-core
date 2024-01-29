@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
     "lib": [
-      "DOM",
       "ES2020",
       "ES2021",
-      "ESNext"
+      "ESNext",
+      "ES2015.Iterable"
     ],
     "outDir": "./dist",
     "removeComments": true,
