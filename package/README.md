@@ -6,12 +6,12 @@ Supported networks: `137 (Polygon Mainnet)`
 
 ### 1. Install SDK core
 ```shell
-npm add @dittonetwork/sdk-core
+npm add @dittoproject/sdk-core
 ```
 
 ### 2. Initialize SDK
 ```js
-import createDittoSDK from "@dittonetwork/sdk-core"
+import createDittoSDK from "@dittoproject/sdk-core"
 
 const sdk = await createDittoSDK({
     signer: "Your signer here (optional, but recommended for front-ends)",
@@ -46,7 +46,7 @@ const result = await sdk.authentication.verifySignature(signature) // => boolean
 
 ### 4. Create and configure automation
 ```js
-import { Ditto } from "@dittonetwork/sdk-core"
+import { Ditto } from "@dittoproject/sdk-core"
 
 const automation = sdk.createAutomation({
     chainId: 137,
