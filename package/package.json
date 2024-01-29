@@ -1,0 +1,36 @@
+{
+  "name": "@dittonetwork/sdk-core",
+  "version": "0.0.1",
+  "author": "Ditto Network",
+  "license": "MIT",
+  "description": "Utility functions library",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "keywords": [
+    "sdk",
+    "ditto"
+  ],
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "dependencies": {
+    "typescript": "^5.0.4",
+    "ethers": "^5.7.2",
+    "bignumber.js": "^9.1.0",
+    "@uniswap/sdk-core": "^3.2.6",
+    "@uniswap/smart-order-router": "^3.16.26"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dittonetwork/sdk-core.git",
+    "directory": "src/package"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/dittonetwork/sdk-core/issues"
+  },
+  "homepage": "https://github.com/dittonetwork/sdk-core#readme"
+}
