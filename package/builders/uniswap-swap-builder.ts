@@ -1,4 +1,4 @@
-import { BuilderOptions, Ditto, DittoInternal } from "../types"
+import { BuilderOptions, CallData, Ditto, DittoInternal } from "../types"
 import BigNumber from "bignumber.js"
 import { wrappedTokenAddresses, zeroAddress } from "../addresses"
 import { ethers } from "ethers"
@@ -11,8 +11,8 @@ import parseUniswapRouterCallData from "../utils/parse-uniswap-router-call-data"
 export default async function uniswapSwapBuilder(
   buildOptions: BuilderOptions,
   options: DittoInternal.ActionOptions[Ditto.Actions.SwapWithUniswap]
-) {
-  const callData = new Set<{ to: string, callData: string }>()
+): Promise<{ callData: Set<CallData>, value: BigNumber }> {
+  const callData = new Set<CallData>()
   let value = new BigNumber(0)
 
   if (options.fromToken === zeroAddress) value = new BigNumber(options.fromAmount)

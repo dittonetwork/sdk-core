@@ -1,5 +1,6 @@
 import { InitOptions } from "./types"
 import { DittoSDK } from "./modules/main"
+import { FeeAmount } from "@uniswap/v3-sdk"
 
 export default async function createDittoSDK(options: InitOptions): Promise<DittoSDK> {
   const signerAddress = await options.signer?.getAddress()
@@ -12,3 +13,5 @@ export default async function createDittoSDK(options: InitOptions): Promise<Ditt
     account: address
   })
 }
+
+export { FeeAmount } from "@uniswap/v3-sdk"

@@ -3,7 +3,7 @@ import { ethers } from "ethers"
 import VaultFactoryABI from "../abis/VaultFactoryABI.json"
 import VaultABI from "../abis/VaultABI.json"
 import { Vault } from "../types"
-import { zeroAddress } from "../addresses"
+import { latestVaultVersion, zeroAddress } from "../addresses"
 
 export default class VaultsModule {
   constructor(private readonly parent: DittoSDK) {
@@ -41,7 +41,10 @@ export default class VaultsModule {
     }
   }
 
-  public deployVault(chainId: number, version: number, key?: number) {
+  public deployVault(chainId: number, _version?: number, key?: number) {
+    const version = latestVaultVersion.get(chainId) ?? _version
+    if (typeof version !== "number") throw new Error("Invalid version or unsupported network")
+
     const exec = async (overrideIndex = 0) => {
       const factoryAddress = this.parent._factoryAddresses.get(chainId)
 

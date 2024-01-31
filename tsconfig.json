@@ -1,15 +1,16 @@
 {
   "compilerOptions": {
     "lib": [
-      "ES2020",
-      "ES2021",
       "ESNext",
-      "ES2015.Iterable"
+      "DOM.Iterable",
+      "DOM",
+      "ESNext.Array",
+      "ES2017.TypedArrays"
     ],
     "outDir": "./dist",
     "removeComments": true,
-    "target": "ES2020",
-    "module": "CommonJS",
+    "target": "ESNext",
+    "module": "ESNext",
     "baseUrl": "./",
     "esModuleInterop": true,
     "moduleResolution": "Node",

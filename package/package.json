@@ -1,9 +1,9 @@
 {
   "name": "@dittoproject/sdk-core",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Ditto Network",
   "license": "MIT",
-  "description": "Utility functions library",
+  "description": "SDK that give developers ability to interact with innovative Ditto platform",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "keywords": [

@@ -1,4 +1,4 @@
-import { AutomationBuildOptions, AutomationInitOptions, Ditto, InitOptions, RootAccountData } from "../types"
+import { AutomationBuildOptions, AutomationInitOptions, CallData, Ditto, InitOptions, RootAccountData } from "../types"
 import useDittoBackend from "../hooks/use-backend"
 import AuthenticationModule from "./authentication"
 import Automation from "./automation"
@@ -61,15 +61,15 @@ export class DittoSDK {
   }
 
   public async buildAutomation(automation: Automation, options: AutomationBuildOptions) {
-    const callData = new Set<{ to: string, callData: string }>()
+    const callData = new Set<CallData>()
 
     if (!this._rootAccountData) throw new Error("Account not initialized")
 
-    const vault = options.vault === "automatic" ? this.vaults.getVault(0, options.chainId) : options.vault
+    const vault = options.vault === "automatic" ? this.vaults.getVault(0, automation.options.chainId) : options.vault
     let vaultAddress = vault?.address
 
     if (!vaultAddress) {
-      const factoryAddress = this._factoryAddresses.get(options.chainId)
+      const factoryAddress = this._factoryAddresses.get(automation.options.chainId)
 
       if (!factoryAddress) throw new Error("Factory address not found for specified chain")
 
@@ -101,7 +101,7 @@ export class DittoSDK {
       accountAddress: this._accountAddress,
       vaultAddress: vaultAddress ?? zeroAddress,
       recipient: (options.transferFrom === Holder.Vault ? vaultAddress : this._accountAddress) ?? zeroAddress
-    }, automation.getTriggerConfiguration()) : { callData: new Set<any>(), value: new BigNumber(0) }
+    }, automation.getTriggerConfiguration()) : { callData: new Set<CallData>(), value: new BigNumber(0) }
 
     const value = safeReduceArray([...actionsCallData.map(a => a.value), triggerCallData.value])
       .toFixed(0)
@@ -109,9 +109,9 @@ export class DittoSDK {
     const vaultInterface = new ethers.utils.Interface(VaultABI)
 
     let repeatCount = 1
-    // if (automation.options.trigger === Triggers.Schedule) {
-    //   repeatCount = automation.getTriggerConfiguration<Triggers.Schedule>().repeatTimes ?? 1
-    // }
+    if (automation.options.trigger === Triggers.Schedule) {
+      repeatCount = automation.getTriggerConfiguration<Triggers.Schedule>().repeatTimes ?? 1
+    }
 
     const vaultRelativeActionsCallData = actionsCallData.map(a => a.callData)
       .map(a => Array.from(a).filter(i => i.to.toLowerCase() === vaultAddress?.toLowerCase()))
@@ -119,7 +119,6 @@ export class DittoSDK {
 
     const vaultRelativeTriggerCallData = Array.from(triggerCallData.callData)
       .filter(i => i.to.toLowerCase() === vaultAddress?.toLowerCase())
-      .map(i => i.callData)
 
     actionsCallData.map(a => a.callData)
       .map(a => Array.from(a).filter(i => i.to.toLowerCase() !== vaultAddress?.toLowerCase()))
@@ -130,7 +129,12 @@ export class DittoSDK {
       .forEach(i => callData.add(i))
 
     const encodedAddWorkflowCall = vaultInterface.encodeFunctionData("addWorkflowAndGelatoTask", [
-      vaultRelativeTriggerCallData,
+      vaultRelativeTriggerCallData.map(i => [
+        i.callData,
+        i.viewData ?? ethers.utils.toUtf8Bytes(""),
+        ethers.utils.toUtf8Bytes(""),
+        i.initData ?? ethers.utils.toUtf8Bytes("")
+      ]),
       vaultRelativeActionsCallData.map(i => [
         i,
         ethers.utils.toUtf8Bytes(""),

@@ -1,8 +1,42 @@
 # Ditto SDK core
 
-Supported networks: `137 (Polygon Mainnet)`
+## Compatibility
+
+This section describes the SDK's current transaction creation and network support capabilities
+
+### Networks
+
+List of networks that the SDK already supports or will support after a few updates
+
+| Network name      | ID    | Supported from    |
+|-------------------|-------|-------------------|
+| Polygon Mainnet   | 137   | v0.0.1            |
+| Arbitrum One      | 42161 | v0.0.2            |
+| BNB chain         | 56    | — (planned)       |
+
+### Actions
+List of actions currently supported by the SDK
+
+| Action                   | Supported from    |
+|--------------------------|-------------------|
+| Swap with uniswap        | v0.0.1            |
+| Swap with dex aggregator | — (planned)       |
+
+### Triggers
+List of triggers currently supported by the SDK
+
+| Trigger     | Supported from    |
+|-------------|-------------------|
+| Instant     | v0.0.1            |
+| Schedule    | v0.0.2            |
+| Price based | v0.0.2            |
+| AAVE        | — (not supported) |
+
+
 
 ## SDK basics
+
+This section provides examples of how to use the SDK and various instructions
 
 ### 1. Install SDK core
 ```shell
@@ -10,6 +44,9 @@ npm add @dittoproject/sdk-core
 ```
 
 ### 2. Initialize SDK
+
+You can install the package in any way you like, including using `yarn`, `bun`, `pnpm`, `npm`, etc.
+
 ```js
 import createDittoSDK from "@dittoproject/sdk-core"
 
@@ -20,6 +57,8 @@ const sdk = await createDittoSDK({
 ```
 
 ### 3. Authentication
+
+Authentication is primarily needed so that users can interact with their smart wallets or create new ones. Without authorization, any actions with smart wallets will be rejected
 
 #### 3.1. Authenticate using existing signer
 
@@ -45,6 +84,9 @@ const result = await sdk.authentication.verifySignature(signature) // => boolean
 ```
 
 ### 4. Create and configure automation
+
+Automation is an object in which user-defined parameters are stored. There can be an unlimited number of these objects. Configured automations can be deployed with the help of SDK
+
 ```js
 import { Ditto } from "@dittoproject/sdk-core"
 
@@ -124,7 +166,7 @@ await sdk.updateCachedAccount()
 In this example we will transfer 0.1 USDT from vault1 to vault2
 
 ```js
-const vault1 = sdk.vault.getVault(0, 137)
+const vault1 = sdk.vaults.getVault(0, 137)
 const vault2 = sdk.vaults.getVault(1, 137)
 
 // To withdraw native currency, pass zero address 

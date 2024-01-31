@@ -1,4 +1,5 @@
 import { ethers } from "ethers"
+import { FeeAmount } from "@uniswap/v3-sdk"
 
 export interface InitOptions {
   backendUrl?: string
@@ -17,7 +18,6 @@ export interface AutomationInitOptions {
 export interface AutomationBuildOptions {
   vault: Vault | Ditto.AutomaticVaultResolve
   transferFrom: Ditto.Holder
-  chainId: number
 }
 
 export interface BuilderOptions {
@@ -56,8 +56,23 @@ export interface RootAccountData {
   accounts: VirtualAccount[]
 }
 
+export type CallData = {
+  to: string
+  callData: string
+  initData?: string
+  viewData?: string
+}
+
 export namespace Ditto {
   export type AutomaticVaultResolve = "automatic"
+
+  export enum TimeScale {
+    Hours = "hours",
+    Days = "days",
+    Months = "months",
+    Weeks = "weeks",
+    Minutes = "minutes"
+  }
 
   export enum Holder {
     Vault,
@@ -69,9 +84,9 @@ export namespace Ditto {
   }
 
   export enum Triggers {
-    // Schedule = "schedule",
+    Schedule = "schedule",
     Instant = "instant",
-    // Price = "price"
+    Price = "price"
   }
 
   export type Trigger<T extends Ditto.Triggers> = DittoInternal.TriggerOptions[T]
@@ -91,19 +106,24 @@ export namespace DittoInternal {
   }
 
   export interface TriggerOptions {
-    // [Ditto.Triggers.Schedule]: {
-    //   startAtTimestamp: number
-    //   repeatTimes?: number
-    // }
+    [Ditto.Triggers.Schedule]: {
+      startAtTimestamp: number
+      repeatTimes?: number
+      cycle: {
+        frequency: number
+        scale: Ditto.TimeScale
+      }
+    }
 
     [Ditto.Triggers.Instant]: {}
 
-    // [Ditto.Triggers.Price]: {
-    //   uniswapPoolFeeTier: number
-    //   triggerAtPrice: number
-    //
-    //   tokenAddress: string
-    //   baseTokenAddress?: string
-    // }
+    [Ditto.Triggers.Price]: {
+      uniswapPoolFeeTier: FeeAmount
+      triggerAtPrice: number
+      priceMustBeHigherThan?: boolean
+
+      tokenAddress: string
+      baseTokenAddress?: string
+    }
   }
 }
